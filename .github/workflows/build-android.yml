@@ -15,24 +15,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract source ZIP
+      - name: Extract nested source archives
         run: |
           mkdir -p app
           unzip -q ludo-dating-app-main.zip -d app
+          INNER_ZIP="$(find app -type f -name '*.zip' -print -quit)"
+          if [ -n "$INNER_ZIP" ]; then
+            mkdir -p app/source
+            unzip -q "$INNER_ZIP" -d app/source
+          fi
           SOURCE_DIR="$(find app -name package.json -print -quit | xargs -r dirname)"
           if [ -z "$SOURCE_DIR" ]; then
-            echo "package.json was not found in ludo-dating-app-main.zip"
-            find app -maxdepth 3 -type f | head -80
+            echo "No package.json found in the uploaded source archives."
+            find app -maxdepth 4 -type f | head -100
             exit 1
           fi
           echo "SOURCE_DIR=$SOURCE_DIR" >> "$GITHUB_ENV"
+          echo "Using source folder: $SOURCE_DIR"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-          cache-dependency-path: app/**/package-lock.json
 
       - name: Set up Java
         uses: actions/setup-java@v4
@@ -66,7 +70,7 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: ludo-dating-app-debug-apk
