@@ -1,5 +1,5 @@
 import AdmZip from "adm-zip";
-import { existsSync, mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync, copyFileSync } from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -26,7 +26,7 @@ for (const f of ["package.json", "index.html", "vite.config.ts"]) {
 
 // Vite 8 requires a newer esbuild than the source archive currently declares.
 const appPackagePath = path.join(appDir, "package.json");
-const appPackage = JSON.parse(await (await import("node:fs/promises")).readFile(appPackagePath, "utf8"));
+const appPackage = JSON.parse(readFileSync(appPackagePath, "utf8"));
 appPackage.devDependencies ??= {};
 appPackage.devDependencies.esbuild = "^0.28.2";
 writeFileSync(appPackagePath, JSON.stringify(appPackage, null, 2) + "\n");
@@ -38,4 +38,17 @@ function run(args) {
 }
 run(["install", "--no-audit", "--no-fund", "--legacy-peer-deps"]);
 run(["run", "build"]);
-if (!existsSync(path.join(appDir, "dist", "index.html"))) throw new Error("Built index.html missing");
+const distDir = path.join(appDir, "dist");
+if (!existsSync(path.join(distDir, "index.html"))) throw new Error("Built index.html missing");
+
+// Publish the standalone playable Ludo MVP beside the app's web build.
+const gamePath = path.join(root, "website", "ludo.html");
+if (!existsSync(gamePath)) throw new Error("Playable Ludo page missing: " + gamePath);
+copyFileSync(gamePath, path.join(distDir, "ludo.html"));
+const indexPath = path.join(distDir, "index.html");
+let html = readFileSync(indexPath, "utf8");
+if (!html.includes('href="/ludo.html"') && !html.includes('href="./ludo.html"')) {
+  const launch = '<a href="/ludo.html" style="position:fixed;right:16px;bottom:16px;z-index:99999;background:#8b5cf6;color:#fff;padding:13px 18px;border-radius:999px;text-decoration:none;font:700 15px system-ui;box-shadow:0 6px 22px #0006">🎲 Play Ludo</a>';
+  html = html.replace("</body>", launch + "</body>");
+  writeFileSync(indexPath, html);
+}
