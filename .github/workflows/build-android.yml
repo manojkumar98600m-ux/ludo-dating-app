@@ -44,6 +44,10 @@ jobs:
           distribution: temurin
           java-version: '21'
 
+      - name: Align esbuild with Vite 8 peer requirement
+        working-directory: ${{ env.SOURCE_DIR }}
+        run: npm pkg set 'devDependencies.esbuild=^0.27.0'
+
       - name: Install dependencies
         working-directory: ${{ env.SOURCE_DIR }}
         run: npm install --no-audit --no-fund
