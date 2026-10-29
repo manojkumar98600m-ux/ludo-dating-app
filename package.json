@@ -1,0 +1,9 @@
+{
+  "name": "ludo-dating-payment-backend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Secure Razorpay serverless endpoints for Ludo Dating membership",
+  "dependencies": {
+    "razorpay": "^2.9.6"
+  }
+}
