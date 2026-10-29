@@ -1,5 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#28104f"/><stop offset="1" stop-color="#080d25"/></linearGradient><linearGradient id="r" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff7184"/><stop offset="1" stop-color="#d91548"/></linearGradient><linearGradient id="b" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#64e1ff"/><stop offset="1" stop-color="#2362e8"/></linearGradient><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#70f6a6"/><stop offset="1" stop-color="#0aa968"/></linearGradient><linearGradient id="y" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff078"/><stop offset="1" stop-color="#ff9a23"/></linearGradient><filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000" flood-opacity=".4"/></filter></defs>
-<rect width="1024" height="1024" rx="220" fill="url(#bg)"/><circle cx="512" cy="512" r="410" fill="#7544c7" opacity=".18"/>
-<g transform="translate(152 152)" filter="url(#s)"><rect width="720" height="720" rx="110" fill="#fff" stroke="#fff" stroke-width="8"/>
-<path d="M100 0H360V240H0V100Q0 0 100 0Z" fill="url(#r)"/><path d="M620 0Q720 0 720 100V240H360V0Z" fill="url(#b)"/><path d="M0 480H360V720H100Q0 720 0 620Z" fill="url(#g)"/><path d="M360 480H720V620Q720 720 620 720H360Z" fill="url(#y)"/><path d="M240 240H480V480H240Z" fill="#f8f5ff"/><path d="M360 240L480 360L360 480L240 360Z" fill="#4b287e"/><g fill="#fff"><circle cx="180" cy="120" r="48"/><circle cx="540" cy="120" r="48"/><circle cx="180" cy="600" r="48"/><circle cx="540" cy="600" r="48"/></g><path d="M360 418C324 385 288 362 288 322C288 284 332 268 360 304C388 268 432 284 432 322C432 362 396 385 360 418Z" fill="#ff3b76" stroke="#fff" stroke-width="9" stroke-linejoin="round"/></g></svg>
+<defs>
+ <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#24104b"/><stop offset="1" stop-color="#090e27"/></linearGradient>
+ <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff6b79"/><stop offset="1" stop-color="#d91448"/></linearGradient>
+ <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#55d8ff"/><stop offset="1" stop-color="#2366e8"/></linearGradient>
+ <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6af2a0"/><stop offset="1" stop-color="#0eaa68"/></linearGradient>
+ <linearGradient id="yellow" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe875"/><stop offset="1" stop-color="#ff9c25"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000" flood-opacity=".4"/></filter>
+</defs>
+<rect width="1024" height="1024" rx="220" fill="url(#bg)"/>
+<circle cx="512" cy="478" r="335" fill="#6c37bd" opacity=".18"/>
+<g filter="url(#shadow)" transform="translate(192 150)">
+ <rect x="0" y="0" width="640" height="640" rx="100" fill="#fff" stroke="#fff" stroke-opacity=".85" stroke-width="12"/>
+ <path d="M100 0H320V220H0V100Q0 0 100 0Z" fill="url(#red)"/>
+ <path d="M540 0Q640 0 640 100V220H320V0Z" fill="url(#blue)"/>
+ <path d="M0 420H320V640H100Q0 640 0 540Z" fill="url(#green)"/>
+ <path d="M320 420H640V540Q640 640 540 640H320Z" fill="url(#yellow)"/>
+ <path d="M220 220H420V420H220Z" fill="#f8f5ff"/>
+ <path d="M320 220L420 320L320 420L220 320Z" fill="#4c2b82"/>
+ <circle cx="160" cy="110" r="42" fill="#fff" opacity=".96"/><circle cx="480" cy="110" r="42" fill="#fff" opacity=".96"/>
+ <circle cx="160" cy="530" r="42" fill="#fff" opacity=".96"/><circle cx="480" cy="530" r="42" fill="#fff" opacity=".96"/>
+ <path d="M320 375C290 347 260 328 260 294C260 263 297 250 320 279C343 250 380 263 380 294C380 328 350 347 320 375Z" fill="#ff3e75" stroke="#fff" stroke-width="8" stroke-linejoin="round"/>
+ <circle cx="320" cy="320" r="24" fill="#fff" opacity=".25"/>
+</g>
+<path d="M214 854H810" stroke="#bd9cff" stroke-width="8" stroke-linecap="round" opacity=".55"/>
+<text x="512" y="916" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="60" text-anchor="middle" fill="#fff" letter-spacing="3">LUDO DATING</text>
+</svg>
