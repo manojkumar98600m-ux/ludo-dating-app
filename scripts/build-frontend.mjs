@@ -47,8 +47,21 @@ if (!existsSync(gamePath)) throw new Error("Playable Ludo page missing: " + game
 copyFileSync(gamePath, path.join(distDir, "ludo.html"));
 const indexPath = path.join(distDir, "index.html");
 let html = readFileSync(indexPath, "utf8");
+
+// Copy the real branding assets into the web bundle so Android WebView can display them.
+const logoPath = path.join(root, "branding", "ludo-dating-logo.svg");
+const iconPath = path.join(root, "branding", "ludo-dating-icon.svg");
+if (existsSync(logoPath)) copyFileSync(logoPath, path.join(distDir, "ludo-dating-logo.svg"));
+if (existsSync(iconPath)) copyFileSync(iconPath, path.join(distDir, "ludo-dating-icon.svg"));
+
+// Set the tab/WebView icon and show the brand in the app itself.
+const favicon = '<link rel="icon" type="image/svg+xml" href="/ludo-dating-icon.svg"><meta name="theme-color" content="#24104b">';
+if (!html.includes('ludo-dating-icon.svg')) html = html.replace("</head>", favicon + "</head>");
+const brandMark = '<a id="ludo-dating-brand" href="/" aria-label="Ludo Dating home" style="position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;z-index:99998;display:flex;align-items:center;gap:7px;padding:5px 10px 5px 5px;border:1px solid #ffffff30;border-radius:999px;background:#24104bef;color:#fff;text-decoration:none;font:700 12px system-ui;box-shadow:0 3px 12px #0003"><img src="/ludo-dating-icon.svg" alt="" style="width:30px;height:30px;border-radius:50%;object-fit:cover"><span>LUDO DATING</span></a>';
+if (!html.includes('id="ludo-dating-brand"')) html = html.replace("</body>", brandMark + "</body>");
+
 if (!html.includes('href="/ludo.html"') && !html.includes('href="./ludo.html"')) {
   const launch = '<a href="/ludo.html" style="position:fixed;right:16px;bottom:16px;z-index:99999;background:#8b5cf6;color:#fff;padding:13px 18px;border-radius:999px;text-decoration:none;font:700 15px system-ui;box-shadow:0 6px 22px #0006">🎲 Play Ludo</a>';
   html = html.replace("</body>", launch + "</body>");
-  writeFileSync(indexPath, html);
 }
+writeFileSync(indexPath, html);
