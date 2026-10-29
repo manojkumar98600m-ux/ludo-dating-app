@@ -50,7 +50,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ env.SOURCE_DIR }}
-        run: npm install --no-audit --no-fund
+        run: npm install --legacy-peer-deps --no-audit --no-fund
 
       - name: Build web app
         working-directory: ${{ env.SOURCE_DIR }}
