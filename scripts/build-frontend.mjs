@@ -23,11 +23,19 @@ for (const e of entries) {
 for (const f of ["package.json", "index.html", "vite.config.ts"]) {
   if (!existsSync(path.join(appDir, f))) throw new Error("Missing " + f + " in source archive");
 }
+
+// Vite 8 requires a newer esbuild than the source archive currently declares.
+const appPackagePath = path.join(appDir, "package.json");
+const appPackage = JSON.parse(await (await import("node:fs/promises")).readFile(appPackagePath, "utf8"));
+appPackage.devDependencies ??= {};
+appPackage.devDependencies.esbuild = "^0.28.2";
+writeFileSync(appPackagePath, JSON.stringify(appPackage, null, 2) + "\n");
+
 function run(args) {
   const r = spawnSync("npm", args, { cwd: appDir, stdio: "inherit" });
   if (r.error) throw r.error;
   if (r.status !== 0) throw new Error("npm command failed");
 }
-run(["install", "--no-audit", "--no-fund"]);
+run(["install", "--no-audit", "--no-fund", "--legacy-peer-deps"]);
 run(["run", "build"]);
 if (!existsSync(path.join(appDir, "dist", "index.html"))) throw new Error("Built index.html missing");
