@@ -7,6 +7,7 @@ on:
       - "ludo-dating-app-source.zip"
       - "scripts/build-frontend.mjs"
       - ".github/workflows/build-apk.yml"
+      - "branding/**"
 
 permissions:
   contents: read
@@ -34,6 +35,12 @@ jobs:
           npm install --no-audit --no-fund
           npm run build
 
+      - name: Create branded app icon
+        run: |
+          mkdir -p app/assets
+          convert branding/ludo-dating-icon.svg -resize 1024x1024 app/assets/icon-only.png
+          cp app/assets/icon-only.png app/assets/splash.png
+
       - name: Configure Capacitor for Android
         working-directory: app
         run: |
@@ -48,12 +55,13 @@ jobs:
           }
           EOF
           npm install --no-audit --no-fund @capacitor/core @capacitor/android
-          npm install --no-audit --no-fund --save-dev @capacitor/cli
+          npm install --no-audit --no-fund --save-dev @capacitor/cli @capacitor/assets
 
       - name: Create Android project
         working-directory: app
         run: |
           npx cap add android
+          npx capacitor-assets generate --android
           npx cap sync android
 
       - name: Build debug APK
