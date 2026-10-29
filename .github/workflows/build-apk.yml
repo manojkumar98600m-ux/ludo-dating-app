@@ -37,8 +37,9 @@ jobs:
 
       - name: Create branded app icon
         run: |
+          npm install --no-save --no-package-lock sharp
           mkdir -p app/assets
-          convert branding/ludo-dating-icon.svg -resize 1024x1024 app/assets/icon-only.png
+          node -e "require('sharp')('branding/ludo-dating-icon.svg').resize(1024,1024).png().toFile('app/assets/icon-only.png').then(()=>console.log('Icon created')).catch(e=>{console.error(e);process.exit(1)})"
           cp app/assets/icon-only.png app/assets/splash.png
 
       - name: Configure Capacitor for Android
