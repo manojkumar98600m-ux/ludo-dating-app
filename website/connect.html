@@ -12,6 +12,7 @@
 <section id="matches" class="hidden card"><h2>Your likes</h2><div id="matchlist"></div><button id="clear" class="secondary">Clear local demo data</button></section>
 <section id="chat" class="hidden card"><h2>Chat demo</h2><p class="muted">Choose a sample conversation. Messages remain on this device only.</p><div class="field"><label>Conversation</label><select id="chatwho"><option value="Aanya">Aanya</option><option value="Kabir">Kabir</option><option value="Mira">Mira</option></select></div><div id="messages" class="messages" aria-live="polite"></div><div class="row"><input id="message" maxlength="300" placeholder="Type a demo message"><button id="send">Send</button></div></section>
 </main>
+<script src="supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const $=id=>document.getElementById(id);
