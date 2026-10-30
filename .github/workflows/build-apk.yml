@@ -1,4 +1,4 @@
-name: Build Android APK
+name: Build Android APK and Play Store Bundle
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  build-apk:
+  build-android:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source
@@ -65,16 +65,28 @@ jobs:
           npx capacitor-assets generate --android
           npx cap sync android
 
-      - name: Build debug APK
+      - name: Build debug APK for device testing
         working-directory: app/android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Build release Android App Bundle
+        working-directory: app/android
+        run: ./gradlew bundleRelease
+
+      - name: Upload test APK
         uses: actions/upload-artifact@v6
         with:
           name: ludo-dating-app-apk
           path: app/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Upload Play Store AAB (unsigned)
+        uses: actions/upload-artifact@v6
+        with:
+          name: ludo-dating-play-store-aab-unsigned
+          path: app/android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
           retention-days: 30
