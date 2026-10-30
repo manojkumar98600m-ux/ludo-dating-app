@@ -1,7 +1,6 @@
 // Ludo Dating public Supabase client configuration.
-// Paste your Supabase Project URL and anon/publishable key below.
-// These two values are intended for browser apps; NEVER put a service_role/secret key here.
+// These browser values are public client credentials; never put service_role/secret keys here.
 window.LUDO_SUPABASE_CONFIG = {
   url: "https://bpsaoufyvgvnvtctupdb.supabase.co",
-  anonKey: ""
+  anonKey: "sb_publishable_RXrzVnUjcoP9QZzOAE8hxg_Wqnegk3x"
 };
