@@ -8,6 +8,7 @@ on:
       - "scripts/build-frontend.mjs"
       - ".github/workflows/build-apk.yml"
       - "branding/**"
+      - "website/**"
 
 permissions:
   contents: read
