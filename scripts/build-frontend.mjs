@@ -45,6 +45,13 @@ if (!existsSync(path.join(distDir, "index.html"))) throw new Error("Built index.
 const gamePath = path.join(root, "website", "ludo.html");
 if (!existsSync(gamePath)) throw new Error("Playable Ludo page missing: " + gamePath);
 copyFileSync(gamePath, path.join(distDir, "ludo.html"));
+
+// Include all standalone site pages in both the hosted site and Android WebView.
+// Keep website/index.html separate because the source ZIP provides the main React app.
+for (const name of ["connect.html", "privacy.html", "terms.html", "refund.html", "supabase-config.js"]) {
+  const source = path.join(root, "website", name);
+  if (existsSync(source)) copyFileSync(source, path.join(distDir, name));
+}
 const indexPath = path.join(distDir, "index.html");
 let html = readFileSync(indexPath, "utf8");
 
