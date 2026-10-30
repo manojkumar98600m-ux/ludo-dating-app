@@ -12,26 +12,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout latest repository files
         uses: actions/checkout@v4
-
-      - name: Extract nested source archives
-        run: |
-          mkdir -p app
-          unzip -q ludo-dating-app-main.zip -d app
-          INNER_ZIP="$(find app -type f -name '*.zip' -print -quit)"
-          if [ -n "$INNER_ZIP" ]; then
-            mkdir -p app/source
-            unzip -q "$INNER_ZIP" -d app/source
-          fi
-          SOURCE_DIR="$(find app -name package.json -print -quit | xargs -r dirname)"
-          if [ -z "$SOURCE_DIR" ]; then
-            echo "No package.json found in the uploaded source archives."
-            find app -maxdepth 4 -type f | head -100
-            exit 1
-          fi
-          echo "SOURCE_DIR=$SOURCE_DIR" >> "$GITHUB_ENV"
-          echo "Using source folder: $SOURCE_DIR"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -44,36 +26,46 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Align esbuild with Vite 8 peer requirement
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: npm pkg set 'devDependencies.esbuild=^0.27.0'
-
-      - name: Install dependencies
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: npm install --legacy-peer-deps --no-audit --no-fund
-
-      - name: Ensure Capacitor CLI and Android platform are installed
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: npm install --save-dev @capacitor/cli @capacitor/android @capacitor/core --legacy-peer-deps --no-audit --no-fund
-
-      - name: Build web app
-        working-directory: ${{ env.SOURCE_DIR }}
-        run: npm run build
-
-      - name: Prepare Android platform
-        working-directory: ${{ env.SOURCE_DIR }}
+      - name: Prepare app from the CURRENT website files (not old ZIP archives)
         run: |
-          if [ ! -f capacitor.config.ts ] && [ ! -f capacitor.config.json ] && [ ! -f capacitor.config.js ]; then
-            echo "Capacitor config is missing from the source archive."
-            exit 1
-          fi
-          if [ ! -d android ]; then
-            npx cap add android
-          fi
+          mkdir -p app/www app/assets
+          cp -R website/. app/www/
+          cp branding/ludo-dating-icon.svg app/assets/icon.svg
+          cat > app/package.json <<'EOF'
+          {
+            "name": "ludo-dating-app",
+            "version": "1.0.0",
+            "private": true,
+            "type": "module",
+            "scripts": {"build": "node -e \"console.log('Static website copied to www')\""}
+          }
+          EOF
+          cat > app/capacitor.config.json <<'EOF'
+          {
+            "appId": "com.manojkumar.ludodating",
+            "appName": "Ludo Dating",
+            "webDir": "www",
+            "server": {"androidScheme": "https"}
+          }
+          EOF
+
+      - name: Install Capacitor and icon tooling
+        working-directory: app
+        run: |
+          npm install --no-audit --no-fund @capacitor/core @capacitor/android
+          npm install --no-audit --no-fund --save-dev @capacitor/cli @capacitor/assets sharp
+          node -e "require('sharp')('assets/icon.svg').resize(1024,1024).png().toFile('assets/icon.png').then(()=>console.log('Branded icon created')).catch(e=>{console.error(e);process.exit(1)})"
+          cp assets/icon.png assets/splash.png
+
+      - name: Create Android project and generate branded icons
+        working-directory: app
+        run: |
+          npx cap add android
+          npx capacitor-assets generate --android
           npx cap sync android
 
       - name: Build debug APK
-        working-directory: ${{ env.SOURCE_DIR }}/android
+        working-directory: app/android
         run: |
           chmod +x gradlew
           ./gradlew assembleDebug
@@ -82,5 +74,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ludo-dating-app-debug-apk
-          path: ${{ env.SOURCE_DIR }}/android/app/build/outputs/apk/debug/app-debug.apk
+          path: app/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+          retention-days: 30
